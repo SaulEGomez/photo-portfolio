@@ -12,6 +12,13 @@ interface PhotoGalleryProps {
 export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGalleryProps) {
   const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null)
   const [viewMode, setViewMode] = useState<'grid' | 'feed'>('grid')
+  const [activeFilter, setActiveFilter] = useState<'all' | 'analog' | 'digital'>('all')
+
+  // Filter archive photos based on selected medium tag
+  const filteredPhotos = archivePhotos.filter((photo: any) => {
+    if (activeFilter === 'all') return true
+    return photo.medium?.toLowerCase() === activeFilter
+  })
 
   return (
     <>
@@ -62,45 +69,68 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
         </div>
       )}
 
-      {/* 3. SEAMLESS ARCHIVE GRID / FEED TOGGLE */}
+      {/* 3. SEAMLESS ARCHIVE CONTROLS & FILTERING */}
       {archivePhotos.length > 0 && (
         <section>
-          <div className="border-t border-neutral-800 pt-8 mb-8 flex items-center justify-between">
+          <div className="border-t border-neutral-800 pt-8 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <h3 className="text-xs uppercase tracking-widest text-neutral-500 font-medium">
               Full Archive
             </h3>
 
-            {/* View Mode Toggle Controls */}
-            <div className="flex items-center bg-neutral-900 p-1 rounded-lg border border-neutral-800">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
-                  viewMode === 'grid'
-                    ? 'bg-neutral-800 text-neutral-100 shadow-sm'
-                    : 'text-neutral-400 hover:text-neutral-200'
-                }`}
-                title="Grid View"
-              >
-                Grid
-              </button>
-              <button
-                onClick={() => setViewMode('feed')}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
-                  viewMode === 'feed'
-                    ? 'bg-neutral-800 text-neutral-100 shadow-sm'
-                    : 'text-neutral-400 hover:text-neutral-200'
-                }`}
-                title="Single Image Stream View"
-              >
-                Feed
-              </button>
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Medium Filter Pills */}
+              <div className="flex items-center bg-neutral-900 p-1 rounded-lg border border-neutral-800">
+                {(['all', 'analog', 'digital'] as const).map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setActiveFilter(filter)}
+                    className={`px-3 py-1 text-xs font-medium rounded-md capitalize transition-colors ${
+                      activeFilter === filter
+                        ? 'bg-neutral-800 text-neutral-100 shadow-sm'
+                        : 'text-neutral-400 hover:text-neutral-200'
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+
+              {/* View Mode Toggle Controls */}
+              <div className="flex items-center bg-neutral-900 p-1 rounded-lg border border-neutral-800">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                    viewMode === 'grid'
+                      ? 'bg-neutral-800 text-neutral-100 shadow-sm'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                  title="Grid View"
+                >
+                  Grid
+                </button>
+                <button
+                  onClick={() => setViewMode('feed')}
+                  className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                    viewMode === 'feed'
+                      ? 'bg-neutral-800 text-neutral-100 shadow-sm'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                  title="Single Image Stream View"
+                >
+                  Feed
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* MODE A: GRID VIEW */}
-          {viewMode === 'grid' ? (
+          {filteredPhotos.length === 0 ? (
+            <div className="text-center py-12 text-neutral-500 border border-dashed border-neutral-800 rounded-lg">
+              No photos found for <span className="capitalize text-neutral-300">{activeFilter}</span> medium.
+            </div>
+          ) : viewMode === 'grid' ? (
+            /* MODE A: GRID VIEW */
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {archivePhotos.map((photo: any) => (
+              {filteredPhotos.map((photo: any) => (
                 <div 
                   key={photo._id} 
                   onClick={() => setSelectedPhoto(photo)}
@@ -125,7 +155,7 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
           ) : (
             /* MODE B: INSTAGRAM-STYLE SINGLE IMAGE FEED VIEW */
             <div className="flex flex-col gap-12 max-w-2xl mx-auto">
-              {archivePhotos.map((photo: any) => (
+              {filteredPhotos.map((photo: any) => (
                 <article 
                   key={photo._id}
                   className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden shadow-sm"
