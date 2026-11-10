@@ -1,5 +1,6 @@
 import { client } from '@/sanity/lib/client'
 import PhotoGallery from './components/PhotoGallery'
+import Image from 'next/image' 
 
 export const instant = false 
 
@@ -18,8 +19,16 @@ export default async function Home() {
       
       {/* 1. PROFILE HEADER */}
       <header className="flex flex-col items-center text-center mb-16 space-y-4">
-        <div className="w-24 h-24 rounded-full overflow-hidden bg-neutral-800 border border-neutral-700">
-          {/* Add your profile picture here later */}
+        <div className="relative w-24 h-24 rounded-full overflow-hidden bg-neutral-800 border border-neutral-700">
+          {/* 2. Rendering profile picture using Next.js Image */}
+          <Image
+            src="/portpic.jpeg" 
+            alt="Saul Gomez"
+            fill
+            sizes="96px"
+            className="object-cover"
+            priority
+          />
         </div>
         <h1 className="text-2xl font-semibold tracking-tight">Saul Gomez</h1>
         <p className="text-neutral-400 max-w-md text-sm leading-relaxed">
