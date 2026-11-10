@@ -11,8 +11,6 @@ import type { Metadata, Viewport } from 'next'
 import { NextStudio } from 'next-sanity/studio'
 import config from '../../../sanity.config'
 
-export const dynamic = 'force-static'
-
 export const metadata: Metadata = {
   title: 'Sanity Studio',
   robots: {
