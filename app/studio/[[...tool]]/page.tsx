@@ -7,23 +7,10 @@
  * https://github.com/sanity-io/next-sanity
  */
 
-import type { Metadata, Viewport } from 'next'
 import { NextStudio } from 'next-sanity/studio'
 import config from '../../../sanity.config'
 
-export const metadata: Metadata = {
-  title: 'Sanity Studio',
-  robots: {
-    index: false,
-    follow: false,
-  },
-}
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-}
+export const dynamic = 'force-dynamic'
 
 export default function StudioPage() {
   return <NextStudio config={config} />
