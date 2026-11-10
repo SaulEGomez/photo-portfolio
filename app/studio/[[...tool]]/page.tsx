@@ -1,13 +1,18 @@
-'use client'
-
-import dynamic from 'next/dynamic'
+import { NextStudio } from 'next-sanity/studio'
+import type { Metadata, Viewport } from 'next'
 import config from '../../../sanity.config'
 
-// Dynamically import NextStudio with SSR disabled so Next.js skips prerendering it
-const NextStudio = dynamic(
-  () => import('next-sanity/studio').then((mod) => mod.NextStudio),
-  { ssr: false }
-)
+export const metadata: Metadata = {
+  title: 'Studio',
+  robots: { index: false, follow: false },
+  referrer: 'same-origin',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
 
 export default function StudioPage() {
   return <NextStudio config={config} />
