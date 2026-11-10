@@ -13,17 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000"
-  ),
+  metadataBase: new URL("https://saulgomez.vercel.app"),
   title: "Saul Gomez — Photography Portfolio",
   description: "A curated archive of analog and digital photography.",
   openGraph: {
     title: "Saul Gomez — Photography Portfolio",
     description: "A curated archive of analog and digital photography.",
-    url: "https://saulgomez.vercel.app", 
+    url: "https://saulgomez.vercel.app",
     siteName: "Saul Gomez Photography",
     images: [
       {
