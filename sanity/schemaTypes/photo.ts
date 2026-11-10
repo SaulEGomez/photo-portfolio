@@ -26,7 +26,7 @@ export default defineType({
       title: 'Web Master Image',
       type: 'image',
       options: {
-        hotspot: true, // Enables visual cropping and focus points in Sanity Studio
+        hotspot: true, // Enables visual cropping and focus points in sanity studio
       },
       validation: (Rule) => Rule.required(),
     }),
@@ -44,6 +44,13 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'takenAt',
+      title: 'Date Taken (Capture Date)',
+      type: 'date',
+      description: 'Optional. Used for chronological sorting. Falls back to creation date if left blank.',
+      // Intentionally left without .required() so it is fully optional
+    }),
+    defineField({
       name: 'exif',
       title: 'Technical EXIF & Gear Details',
       type: 'object',
@@ -52,9 +59,11 @@ export default defineType({
         defineField({ name: 'lens', title: 'Lens', type: 'string' }),
         defineField({ 
           name: 'filmStock', 
-          title: 'Film Stock (If Film)', 
+          title: 'Film Stock', 
           type: 'string',
-          description: 'e.g., Kodak Portra 400, Ilford HP5, CineStill 800T' 
+          description: 'e.g., Kodak Portra 400, Ilford HP5',
+          // Automatically hides this field in the studio if medium is set to digital
+          hidden: ({ document }) => document?.medium !== 'film',
         }),
         defineField({ name: 'iso', title: 'ISO', type: 'number' }),
         defineField({ name: 'aperture', title: 'Aperture', type: 'string', description: 'e.g., f/2.8' }),
@@ -83,4 +92,19 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+      media: 'image',
+      location: 'location',
+      date: 'takenAt',
+    },
+    prepare({ title, media, location, date }) {
+      return {
+        title: title || 'Untitled',
+        subtitle: [location, date].filter(Boolean).join(' • '),
+        media: media,
+      }
+    },
+  },
 })

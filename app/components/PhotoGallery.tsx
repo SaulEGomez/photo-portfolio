@@ -14,6 +14,24 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
   const [viewMode, setViewMode] = useState<'grid' | 'feed'>('grid')
   const [activeFilter, setActiveFilter] = useState<'all' | 'analog' | 'digital'>('all')
 
+  // Helper to format metadata cleanly (Medium • Film Stock • Camera • Lens)
+  const getMetadataString = (photo: any) => {
+    return [
+      photo.medium,
+      photo.exif?.filmStock,
+      photo.exif?.camera,
+      photo.exif?.lens
+    ]
+      .filter(Boolean)
+      .join(' • ')
+  }
+
+  // Helper to get the correct display date (takenAt first, falling back to publishedAt)
+  const getPhotoDate = (photo: any) => {
+    const dateToUse = photo.takenAt || photo.publishedAt
+    return dateToUse ? new Date(dateToUse).toLocaleDateString() : ''
+  }
+
   // Filter archive photos based on selected medium tag
   const filteredPhotos = archivePhotos.filter((photo: any) => {
     if (activeFilter === 'all') return true
@@ -30,7 +48,7 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
               Latest Dispatch / Highlight
             </span>
             <span className="text-xs text-neutral-500">
-              {new Date(latestPhoto.publishedAt).toLocaleDateString()}
+              {getPhotoDate(latestPhoto)}
             </span>
           </div>
           
@@ -50,11 +68,12 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
             )}
             <div className="p-4 flex justify-between items-center bg-neutral-900/80 backdrop-blur-sm border-t border-neutral-800/50">
               <div>
+                {/* Fixed: Removed 'Untitled' fallback so it renders blank if title is missing */}
                 <h2 className="font-medium text-sm text-neutral-200">
-                  {latestPhoto.title || 'Untitled'}
+                  {latestPhoto.title}
                 </h2>
-                <p className="text-xs text-neutral-400 capitalize">
-                  {latestPhoto.medium} {latestPhoto.exif?.camera ? `• ${latestPhoto.exif.camera}` : ''}
+                <p className="text-xs text-neutral-400 capitalize mt-0.5">
+                  {getMetadataString(latestPhoto)}
                 </p>
               </div>
               {latestPhoto.location && (
@@ -145,8 +164,9 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
                     />
                   )}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                    {/* Fixed: Removed 'Untitled' fallback */}
                     <p className="text-xs text-neutral-200 font-medium truncate">
-                      {photo.title || 'Untitled'}
+                      {photo.title}
                     </p>
                   </div>
                 </div>
@@ -176,16 +196,17 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
                   </div>
                   <div className="p-4 flex justify-between items-center border-t border-neutral-800/60">
                     <div>
+                      {/* Fixed: Removed 'Untitled' fallback */}
                       <h4 className="font-medium text-sm text-neutral-200">
-                        {photo.title || 'Untitled'}
+                        {photo.title}
                       </h4>
                       <p className="text-xs text-neutral-400 capitalize mt-0.5">
-                        {photo.medium} {photo.exif?.camera ? `• ${photo.exif.camera}` : ''}
+                        {getMetadataString(photo)}
                       </p>
                     </div>
                     <div className="text-right text-xs text-neutral-500">
                       {photo.location && <div>{photo.location}</div>}
-                      <div>{new Date(photo.publishedAt).toLocaleDateString()}</div>
+                      <div>{getPhotoDate(photo)}</div>
                     </div>
                   </div>
                 </article>
@@ -228,13 +249,12 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
             {/* Metadata Footer */}
             <div className="p-6 bg-neutral-900 border-t border-neutral-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
+                {/* Fixed: Removed 'Untitled' fallback */}
                 <h3 className="text-base font-semibold text-neutral-100">
-                  {selectedPhoto.title || 'Untitled'}
+                  {selectedPhoto.title}
                 </h3>
                 <p className="text-xs text-neutral-400 capitalize mt-1">
-                  {selectedPhoto.medium} 
-                  {selectedPhoto.exif?.camera ? ` • ${selectedPhoto.exif.camera}` : ''}
-                  {selectedPhoto.exif?.lens ? ` • ${selectedPhoto.exif.lens}` : ''}
+                  {getMetadataString(selectedPhoto)}
                 </p>
               </div>
 
@@ -245,7 +265,7 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
                   </span>
                 )}
                 <span>
-                  {new Date(selectedPhoto.publishedAt).toLocaleDateString()}
+                  {getPhotoDate(selectedPhoto)}
                 </span>
               </div>
             </div>
