@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://saulgomez.vercel.app"),
   title: "Saul Gomez — Photography Portfolio",
   description: "A curated archive of analog and digital photography.",
+  icons: {
+    icon: "/og-image-favi.png",
+    apple: "/og-image-favi.png",
+  },
   openGraph: {
     title: "Saul Gomez — Photography Portfolio",
     description: "A curated archive of analog and digital photography.",
