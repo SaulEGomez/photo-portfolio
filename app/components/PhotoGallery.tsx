@@ -45,7 +45,7 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
         <section className="mb-20">
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs uppercase tracking-widest text-neutral-500 font-medium">
-              Latest Dispatch / Highlight
+              Latest Highlight
             </span>
             <span className="text-xs text-neutral-500">
               {getPhotoDate(latestPhoto)}

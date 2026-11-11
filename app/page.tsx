@@ -22,7 +22,7 @@ export default async function Home() {
         <div className="relative w-24 h-24 rounded-full overflow-hidden bg-neutral-800 border border-neutral-700">
           {/* 2. Rendering profile picture using Next.js Image */}
           <Image
-            src="/portpic.jpeg" 
+            src="/portpic2.jpg" 
             alt="Saul Gomez"
             fill
             sizes="96px"
@@ -32,7 +32,7 @@ export default async function Home() {
         </div>
         <h1 className="text-2xl font-semibold tracking-tight">Saul Gomez</h1>
         <p className="text-neutral-400 max-w-md text-sm leading-relaxed">
-          My personal analog & digital archives documenting just about anything.
+          My personal analog & digital archives
         </p>
       </header>
 
