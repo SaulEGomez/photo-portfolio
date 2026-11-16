@@ -5,7 +5,8 @@ import Image from 'next/image'
 export const instant = false 
 
 async function getPhotos() {
-  const query = `*[_type == "photo"] | order(publishedAt desc)`
+  // Sort by capture date, falling back to publish/creation date when takenAt is blank
+  const query = `*[_type == "photo"] | order(coalesce(takenAt, publishedAt, _createdAt) desc)`
   return await client.fetch(query, {}, { cache: 'no-store' })
 }
 

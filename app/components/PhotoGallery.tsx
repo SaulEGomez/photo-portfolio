@@ -32,10 +32,12 @@ export default function PhotoGallery({ latestPhoto, archivePhotos }: PhotoGaller
     return dateToUse ? new Date(dateToUse).toLocaleDateString() : ''
   }
 
-  // Filter archive photos based on selected medium tag
+  // Filter archive photos based on selected medium tag.
+  // The "Analog" pill maps to the schema's stored value, 'film'.
   const filteredPhotos = archivePhotos.filter((photo: any) => {
     if (activeFilter === 'all') return true
-    return photo.medium?.toLowerCase() === activeFilter
+    const mediumValue = activeFilter === 'analog' ? 'film' : activeFilter
+    return photo.medium?.toLowerCase() === mediumValue
   })
 
   return (
